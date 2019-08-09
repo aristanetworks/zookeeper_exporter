@@ -156,7 +156,7 @@ func (e *exporter) scrape(ch chan<- prometheus.Metric) {
 func (e *exporter) pollServer(server string, ch chan<- prometheus.Metric, wg *sync.WaitGroup) {
 	defer wg.Done()
 
-	conn, err := net.Dial("tcp", server)
+	conn, err := net.DialTimeout("tcp", server, 10*time.Second)
 	if err != nil {
 		e.recordErr(err)
 		return
