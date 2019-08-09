@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/prometheus/log"
 )
 
@@ -202,7 +203,7 @@ func main() {
 	exporter := newZooKeeperExporter(flag.Args(), *useExhibitor)
 	prometheus.MustRegister(exporter)
 
-	http.Handle(*metricPath, prometheus.Handler())
+	http.Handle(*metricPath, promhttp.Handler())
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, *metricPath, http.StatusMovedPermanently)
 	})
