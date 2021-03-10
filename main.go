@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"regexp"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -172,6 +173,9 @@ func (e *exporter) pollServer(server string, ch chan<- prometheus.Metric, wg *sy
 		entry := scanner.Text()
 
 		key := r.FindAllString(entry, -1)[0]
+		// Some metrics can have "-" in them and it's not allowed
+		// by prometheus, so changing "-" to "_"
+		key = strings.Replace(key, "-", "_")
 		value := r.FindAllString(entry, -1)[1]
 
 		switch key {
